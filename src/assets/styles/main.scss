@@ -1,0 +1,10 @@
+@import 'vars';
+@import 'fonts';
+
+%fonts {
+  font-family: $Gilroy-400;
+  font-size: 20px;
+}
+body {
+  @extend %fonts;
+}
