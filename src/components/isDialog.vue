@@ -15,28 +15,27 @@
   </transition>
 </template>
 
-<script >
+<script>
 import { defineComponent } from 'vue'
 
-
 export default defineComponent({
-  props: {
-    modal: {
-      type: Boolean,
-      default: false
-    }
-  },
+  props: ['modal'],
+  setup(props, { emit }) {
 
-  setup() {
     const hideDialog = () => {
-      this.$emit('update:modal', false)
+      emit('update:modal', false)
     }
 
     return {
-      hideDialog
+      hideDialog,
     }
   }
+
+
 })
+
+
+
 
 </script>
 
