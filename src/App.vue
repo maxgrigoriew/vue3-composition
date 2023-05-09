@@ -4,7 +4,7 @@
       ref="h2"
       class="mb-3 text-right"
     >Страница постов</h2>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-items-start">
 
       <is-button
         @click="openModal"
@@ -31,7 +31,7 @@
       @remove="removePost"
     />
 
-    <is-dialog v-model:modal="visibleModal">
+    <is-dialog ref='dialog'>
 
       <is-form
         :posts="posts"
@@ -57,7 +57,7 @@ import IsDialog from "@/components/isDialog";
 import IsSelect from "@/components/isSelect";
 import testMixin from "@/mixins/testMixin";
 import consoleMixin from "@/mixins/consoleMixin";
-import axios from 'axios'
+import axios from 'axios';
 import IsPagination from "@/components/isPagination";
 
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
@@ -82,7 +82,7 @@ export default defineComponent({
       action: 'Действие'
     })
 
-    const visibleModal = ref(false)
+    const dialog = ref(null)
 
     const options = ref([
       { value: 'title', name: 'По названию' },
@@ -108,7 +108,7 @@ export default defineComponent({
 
     const addPost = (post) => {
       posts.value.push(post)
-      visibleModal.value = false
+      dialog.value.close()
     }
 
     const removePost = (post) => {
@@ -128,23 +128,24 @@ export default defineComponent({
         const response = await data.data
         setTimeout(() => {
           posts.value = response
-        }, 1000);
+          loader.value.close()
+        }, 500);
         console.log('loader.value', loader)
-        loader.value.close()
       } catch (e) {
         console.log(e)
       }
     }
 
     const openModal = () => {
-      visibleModal.value = true
+      dialog.value.open()
     }
 
-    const changePage = (page) => {
-      page.value = page
+    const changePage = (pageNumber) => {
+      page.value = pageNumber
       searchInput.value = ''
-      fetchPosts.value()
+      fetchPosts()
     }
+
     const postsProps = computed(() => {
       return {
         tableHeader: tableHeader.value
@@ -166,15 +167,19 @@ export default defineComponent({
     //       return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
     //    })
     // },
-    const filtredList = computed(() => {
-      return posts.value.filter((post) => post.title.includes(searchInput.value.toLowerCase().trim()))
-    })
+    // const filtredList = computed(() => {
+    //   return posts.value.filter((post) => post.title.includes(searchInput.value.toLowerCase().trim()))
+    // })
+
+    const filtredList = computed(() => posts.value.filter((post) =>
+      post.title.includes(searchInput.value.toLowerCase().trim())))
 
     watch(selectedSort, () => {
       return posts.value.sort((post1, post2) => {
         return post1[selectedSort.value]?.localeCompare(post2[selectedSort.value])
       })
     })
+
     // searchInput(newValue) {
     //    this.posts.filter((post) => {
     //       return post.title.includes(newValue)
@@ -195,7 +200,7 @@ export default defineComponent({
       names,
       posts,
       tableHeader,
-      visibleModal,
+      dialog,
       options,
       selectedSort,
       searchInput,

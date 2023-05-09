@@ -2,13 +2,20 @@
   <transition>
     <div
       v-show="modal"
-      @click="hideDialog"
+      @click="close"
       class="dialog"
     >
       <div
         @click.stop
         class="dialog__inner"
       >
+        <div class="d-flex justify-content-end mb-1">
+          <is-button
+            @click='close'
+            class="btn ml-auto"
+          >x</is-button>
+        </div>
+
         <slot></slot>
       </div>
     </div>
@@ -16,18 +23,26 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  props: ['modal'],
-  setup(props, { emit }) {
+  setup() {
+    const modal = ref(false)
 
-    const hideDialog = () => {
-      emit('update:modal', false)
+    const open = () => {
+      console.log('open')
+      modal.value = true
+    }
+
+    const close = () => {
+      console.log('close')
+      modal.value = false
     }
 
     return {
-      hideDialog,
+      open,
+      close,
+      modal,
     }
   }
 
