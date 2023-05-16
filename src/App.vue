@@ -10,7 +10,6 @@
         @click="openModal"
         class="align-items-center"
       >
-        Добавить пост
       </is-button>
 
       <is-input
