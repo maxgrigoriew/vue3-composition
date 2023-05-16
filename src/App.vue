@@ -30,7 +30,10 @@
       @remove="removePost"
     />
 
-    <is-dialog v-model:modal="visibleModal">
+    <is-dialog
+      @closeModal="closeDialog"
+      :visibleModal="visibleModal"
+    >
 
       <is-form
         :posts="posts"
@@ -82,7 +85,9 @@ export default defineComponent({
     })
 
     const visibleModal = ref(false)
-
+    const closeDialog = () => {
+      visibleModal.value = false
+    }
     const options = ref([
       { value: 'title', name: 'По названию' },
       { value: 'body', name: 'По описанию' },
@@ -210,6 +215,7 @@ export default defineComponent({
       postsProps,
       filtredList,
       loader,
+      closeDialog,
     }
   }
 })

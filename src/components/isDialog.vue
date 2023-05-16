@@ -1,7 +1,7 @@
 <template>
   <transition>
     <div
-      v-show="modal"
+      v-show="visibleModal"
       @click="hideDialog"
       class="dialog"
     >
@@ -15,27 +15,16 @@
   </transition>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { defineProps, defineEmits } from 'vue'
 
-export default defineComponent({
-  props: ['modal'],
-  setup(props, { emit }) {
+defineProps(['visibleModal'])
 
-    const hideDialog = () => {
-      emit('update:modal', false)
-    }
+const emits = defineEmits(['isModal'])
 
-    return {
-      hideDialog,
-    }
-  }
-
-
-})
-
-
-
+const hideDialog = () => {
+  emits('closeModal')
+}
 
 </script>
 
