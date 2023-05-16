@@ -14,23 +14,21 @@
   </transition>
 </template>
 
-<script>
-export default {
-  name: "is-loader",
-  data() {
-    return {
-      status: true
-    }
-  },
-  methods: {
-    close() {
-      this.status = false
-    },
-    open() {
-      this.status = true
-    }
-  }
+<script setup>
+import { ref, defineExpose } from 'vue'
+
+const status = ref(false)
+const close = () => {
+  status.value = false
 }
+
+const open = () => {
+  status.value = true
+}
+defineExpose({
+  close,
+  open
+})
 </script>
 
 <style scoped>
